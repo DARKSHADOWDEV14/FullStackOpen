@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 
-//Funciones
+//Componentes
 const Header = ({ course }) => {
   return (
     <>
@@ -32,10 +32,38 @@ const Total = ({ parts }) => {
   );
 };
 
+
+
 const Display = ({ counter }) => <> {counter} </>;
 
-const Button = ({ onClick, text }) => 
-  <button onClick={onClick}> {text} </button>
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+
+
+
+const History = ({allClicks}) => {
+  if (allClicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
+  return (
+    <div>
+      button press history: {allClicks.join(' ')}
+    </div>
+  )
+}
+
+
+
+
+
 
 
 // Aplicación principal
@@ -47,6 +75,7 @@ const App = () => {
   const [left, setLeft] = useState(0)
   const [right, setRight] = useState(0)
   const [total, setTotal] = useState(0)
+
 
   const handleLeftClick = () => {
     setAll(allClicks.concat('L'))
@@ -98,6 +127,10 @@ const App = () => {
     },
   ];
 
+  
+
+  
+
   return (
     <>
       <Header course={course} />
@@ -107,17 +140,20 @@ const App = () => {
       <Total parts={parts} />
       <Display counter={counter} />
 
-      <Button onClick={increaseByOne} text="plus" />
-      <Button onClick={setToZero} text="zero" />
-      <Button onClick={decreaseByOne} text="minus" />
+      <Button handleClick={increaseByOne} text="plus" />
+      <Button handleClick={setToZero} text="zero" />
+      <Button handleClick={decreaseByOne} text="minus" />
 
       <div>
       {left}
-      <button onClick={handleLeftClick}>left</button>
-      <button onClick={handleRightClick}>right</button>
+      <Button handleClick={handleLeftClick} text='left' />
+      <Button handleClick={handleRightClick} text='right' />
       {right}
+      <History allClicks={allClicks} />
       <p>{allClicks.join(' ')}</p>
       <p>total {total}</p>
+        
+      
       </div>
     </>
   );
