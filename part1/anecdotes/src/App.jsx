@@ -32,8 +32,8 @@ function App() {
    };
    
    const maxVotes = Math.max(...votes);
-   
    const mostVoted = votes.indexOf(maxVotes)
+   
   return (
     <>
       <h1>Anecdote of the day</h1>

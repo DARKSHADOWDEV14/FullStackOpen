@@ -26,13 +26,13 @@ const Positive = ({ counterGood, counterNeutral, counterBad }) => {
 
 const Statistics = ({ counterGood, counterNeutral, counterBad }) => {
   const total = counterGood + counterNeutral + counterBad;
-  if (total === 0) {
+  if (total === 0) 
     return (
       <>
         <p>No feedback given</p>
       </>
     );
-  }
+  
   return (
     <>
       <StatisticsLine text="good" value={counterGood} />
