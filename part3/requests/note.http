@@ -1,0 +1,27 @@
+### obtener las notas
+GET http://localhost:3001/api/notes
+
+### Obtener una nota por id
+GET http://localhost:3001/api/notes/3
+
+### Eliminar una nota
+DELETE http://localhost:3001/api/notes/3
+
+###
+
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+  {
+    "content": "Esto es una nueva nota",
+    "important": true
+  }
+
+### agregar nota vacía
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+  {
+    "content": "",
+    "important": true
+  }
