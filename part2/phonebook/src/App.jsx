@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import personsServices from "./services/persons";
+import Notification from "./components/Notification";
 
 // const Note = ({ note, toggleImportance }) => {
 //   const label = note.important
@@ -15,28 +16,19 @@ import personsServices from "./services/persons";
 //   )
 // }
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
 
-  return (
-    <div className={message.type}>
-      {message.message}
-    </div>
-  );
-};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    personsServices.getAll().then((response) => {
+    personsServices
+    .getAll()
+    .then((response) => {
       setPersons(response.data);
     });
   }, []);
@@ -151,9 +143,7 @@ const App = () => {
 
       personsServices
         .remove(id)
-
         .then(() => {
-
           setPersons(
             persons.filter(person => person.id !== id)
           );
@@ -169,7 +159,6 @@ const App = () => {
         })
 
         .catch(error => {
-
           setMessage({
             message: `Information of ${person.name} has already been removed from server`,
             type: "error",
