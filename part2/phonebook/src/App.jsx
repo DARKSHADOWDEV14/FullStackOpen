@@ -26,12 +26,16 @@ const App = () => {
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    personsServices
+  personsServices
     .getAll()
-    .then((response) => {
-      setPersons(response.data);
-    });
-  }, []);
+    .then(response => {
+      console.log(response.data)
+      console.log(typeof response.data)
+      console.log(Array.isArray(response.data))
+
+      setPersons(response.data)
+    })
+}, [])
 
   const addNewName = (event) => {
     event.preventDefault();
