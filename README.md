@@ -15,3 +15,22 @@ part2
   courseinfo
   phonebook
   countries
+
+npm run build = Esto crea un directorio llamado dist (que contiene el único archivo HTML de nuestra aplicación, index.html)
+--------------------------------------------------------------------------------------------------------
+Se debe agregar esto en vite.config.js despues de reducir el patch http://localhost:3001/api/persons a /api/persons, enlace a la aplicación en línea  https://fullstackopenb.onrender.com/
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001/api/persons',
+        changeOrigin: true,
+      },
+    },
+  },
+})
