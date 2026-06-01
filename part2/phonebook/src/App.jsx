@@ -24,6 +24,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
   const [message, setMessage] = useState(null);
+  const [username, setUsername] = useState('') 
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
   personsServices
@@ -36,6 +38,11 @@ const App = () => {
       setPersons(response.data)
     })
 }, [])
+
+  const handleLogin = (event) => {
+    event.preventDefault()
+    console.log('logging in with', username, password)
+  }
 
   const addNewName = (event) => {
     event.preventDefault();
@@ -197,6 +204,28 @@ const App = () => {
 
   return (
     <>
+    <form onSubmit={handleLogin}>
+        <div>
+          username
+            <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+            <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>
+      
       <h2>Phonebook</h2>
       <Notification message={message} />
       <h2>filter shown with:</h2>
