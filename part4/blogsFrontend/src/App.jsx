@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import BlogForm from "./components/formBlogs";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useState, useEffect, useRef } from "react";
+import BlogForm from "./components/BlogForm";
 import blogsServices from "./services/blogs";
 import Notification from "./components/Notification";
 import Filter from "./components/Filter";
 import LoginForm from "./components/LoginForm";
 import loginService from "./services/login";
 import Button from "./components/Button";
+import Togglable from "./components/Togglable";
 
 //  const BlogImportant = ({ note, toggleImportance }) => {
 //   const label = note.important
@@ -30,6 +32,9 @@ function App() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const blogFormRef = useRef()
+  
 
   useEffect(() => {
     blogsServices.getAll().then((response) => {
@@ -149,7 +154,8 @@ function App() {
         author: newAuthor,
         url: newUrl,
         likes: newLikes,
-      };
+      }
+      blogFormRef.current.toggleVisibility()
 
       const createdBlog = await blogsServices.create(newBlog);
 
@@ -259,6 +265,9 @@ function App() {
   )
 })
 
+
+  
+
   return (
     <>
       <Notification message={message} />
@@ -270,6 +279,10 @@ function App() {
       )}
 
       {!user ? (
+        <> 
+
+        <Togglable buttonLabel="Login" ref={blogFormRef}>
+
         <LoginForm
           handleLogin={handleLogin}
           username={username}
@@ -277,6 +290,8 @@ function App() {
           handleUsernameChange={handleUsernameChange}
           handlePasswordChange={handlePasswordChange}
         />
+        </Togglable>
+        </>
       ) : (
         <>
           <h1>Blogs</h1>
@@ -319,5 +334,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;
