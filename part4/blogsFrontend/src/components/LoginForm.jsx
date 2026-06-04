@@ -1,13 +1,13 @@
 
 
- const LoginForm = ({ handleLogin, username, password, handleUsernameChange, handlePasswordChange }) => {
-  
+const LoginForm = ({ handleLogin, username, password, handleUsernameChange, handlePasswordChange }) => {
+
   return (
     <>
-    <form onSubmit={handleLogin}>
+      <form onSubmit={handleLogin}>
         <div>
           username
-            <input
+          <input
             type="text"
             value={username}
             name="Username"
@@ -17,17 +17,17 @@
         </div>
         <div>
           password
-            <input
+          <input
             type="password"
             value={password}
             name="Password"
-             autoComplete="current-password"
+            autoComplete="current-password"
             onChange={handlePasswordChange}
           />
         </div>
         <button type="submit">Login</button>
       </form>
-      </>
+    </>
   )
 }
 

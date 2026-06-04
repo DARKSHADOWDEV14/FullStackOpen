@@ -26,15 +26,14 @@ function App() {
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
-  const [newLikes, setNewLikes] = useState(0);
+  // const [newLikes, setNewLikes] = useState(0)
   const [message, setMessage] = useState(null);
   const [filterTitle, setFilterTitle] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const blogFormRef = useRef()
-  
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogsServices.getAll().then((response) => {
@@ -111,118 +110,119 @@ function App() {
   };
 
   const addNewBlog = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  const existingBlog = blogs.find(
-    (blog) => blog.title.toLowerCase() === newTitle.toLowerCase()
-  );
+    const existingBlog = blogs.find(
+      (blog) => blog.title.toLowerCase() === newTitle.toLowerCase(),
+    );
 
-  try {
-    if (existingBlog) {
-      const confirmUpdate = window.confirm(
-        `${newTitle} is already added to phonebook, replace the old number with a new one?`
-      );
+    try {
+      if (existingBlog) {
+        const confirmUpdate = window.confirm(
+          `${newTitle} is already added to phonebook, replace the old number with a new one?`,
+        );
 
-      if (!confirmUpdate) {
-        return;
+        if (!confirmUpdate) {
+          return;
+        }
+
+        const changedBlog = {
+          ...existingBlog,
+          url: newUrl,
+          author: newAuthor,
+        };
+
+        const updatedBlog = await blogsServices.update(
+          existingBlog.id,
+          changedBlog,
+        );
+
+        setBlogs(
+          blogs.map((blog) =>
+            blog.id !== existingBlog.id ? blog : updatedBlog,
+          ),
+        );
+
+        setMessage({
+          message: `Updated ${updatedBlog.title}`,
+          type: "success",
+        });
+      } else {
+        const newBlog = {
+          title: newTitle,
+          author: newAuthor,
+          url: newUrl,
+          likes: newLikes,
+        };
+
+        blogFormRef.current.toggleVisibility(); //useRef
+
+        const createdBlog = await blogsServices.create(newBlog);
+
+        console.log("CREADO:", createdBlog);
+
+        setBlogs(blogs.concat(createdBlog));
+
+        setMessage({
+          message: `Added ${createdBlog.title} by ${createdBlog.author}`,
+          type: "success",
+        });
       }
 
-      const changedBlog = {
-        ...existingBlog,
-        url: newUrl,
-        author: newAuthor,
-      };
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
 
-      const updatedBlog = await blogsServices.update(
-        existingBlog.id,
-        changedBlog
-      );
-
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id !== existingBlog.id ? blog : updatedBlog
-        )
-      );
+      setNewTitle("");
+      setNewAuthor("");
+      setNewUrl("");
+      setNewLikes(0);
+    } catch (error) {
+      console.error(error);
 
       setMessage({
-        message: `Updated ${updatedBlog.title}`,
-        type: "success",
+        message: error.response?.data?.error || error.message,
+        type: "error",
       });
-    } else {
-      const newBlog = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl,
-        likes: newLikes,
-      }
-      blogFormRef.current.toggleVisibility()
 
-      const createdBlog = await blogsServices.create(newBlog);
-
-      setBlogs(blogs.concat(createdBlog));
-
-      setMessage({
-        message: `Added ${createdBlog.title} by ${createdBlog.author}`,
-        type: "success",
-      });
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     }
-
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-
-    setNewTitle("");
-    setNewAuthor("");
-    setNewUrl("");
-    setNewLikes(0);
-
-  } catch (error) {
-    console.error(error);
-
-    setMessage({
-      message: "Operation failed",
-      type: "error",
-    });
-
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-  }
-};
+  };
 
   const removeBlog = async (id) => {
-  const blog = blogs.find((p) => p.id === id);
+    const blog = blogs.find((p) => p.id === id);
 
-  if (!window.confirm(`Delete ${blog.title}?`)) {
-    return;
-  }
+    if (!window.confirm(`Delete ${blog.title}?`)) {
+      return;
+    }
 
-  try {
-    await blogsServices.remove(id);
+    try {
+      await blogsServices.remove(id);
 
-    setBlogs(blogs.filter((blog) => blog.id !== id));
+      setBlogs(blogs.filter((blog) => blog.id !== id));
 
-    setMessage({
-      message: `Deleted ${blog.title}`,
-      type: "success",
-    });
+      setMessage({
+        message: `Deleted ${blog.title}`,
+        type: "success",
+      });
 
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } catch (e) {
+      setMessage({
+        message: `Information of ${blog.title} has already been removed from server`,
+        type: "error",
+        error: e,
+      });
 
-  } catch (e){
-    setMessage({
-      message: `Information of ${blog.title} has already been removed from server`,
-      type: "error",
-      error: e
-    });
-
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
-  }
-};
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
+  };
 
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value);
@@ -244,29 +244,42 @@ function App() {
     setFilterTitle(event.target.value);
   };
 
-  const updateLikes = (blog, value) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + value,
-    };
+  const updateLikes = async (blog, value) => {
+  
+    try {
+      const updatedBlog = {
+        ...blog,
+        likes: blog.likes + value,
+      };
+    
 
-    blogsServices.update(blog.id, updatedBlog).then((response) => {
-      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : response.data)));
-    });
+      const returnedBlog = await blogsServices.update(blog.id, updatedBlog);
+      console.log("RESPUESTA:", returnedBlog);
+
+      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : returnedBlog)));
+    } catch (error) {
+      console.error("Error updating likes:", error);
+
+      setMessage({
+        message: "Error updating likes",
+        type: "error",
+      });
+
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    }
   };
 
   const blogsToShow = blogs.filter((blog, index) => {
-  console.log(index, blog)
+    console.log(index, blog);
 
-  return (
-    blog &&
-    blog.title &&
-    blog.title.toLowerCase().includes(filterTitle.toLowerCase())
-  )
-})
-
-
-  
+    return (
+      blog &&
+      blog.title &&
+      blog.title.toLowerCase().includes(filterTitle.toLowerCase())
+    );
+  });
 
   return (
     <>
@@ -279,18 +292,16 @@ function App() {
       )}
 
       {!user ? (
-        <> 
-
-        <Togglable buttonLabel="Login" ref={blogFormRef}>
-
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-        />
-        </Togglable>
+        <>
+          <Togglable buttonLabel="Login" ref={blogFormRef} text="Cancel">
+            <LoginForm
+              handleLogin={handleLogin}
+              username={username}
+              password={password}
+              handleUsernameChange={handleUsernameChange}
+              handlePasswordChange={handlePasswordChange}
+            />
+          </Togglable>
         </>
       ) : (
         <>
@@ -304,29 +315,31 @@ function App() {
               handleFilterChange={handleFilterChange}
             />
           </div>
+          <Togglable buttonLabel="Add New Blog" ref={blogFormRef} text="Cancel">
+            <h2>Add New Blog</h2>
 
-          <h2>Add New Blog</h2>
-          <BlogForm
-            addNewBlog={addNewBlog}
-            newTitle={newTitle}
-            handleTitleChange={handleTitleChange}
-            newAuthor={newAuthor}
-            handleAuthorChange={handleAuthorChange}
-            newUrl={newUrl}
-            handleUrlChange={handleUrlChange}
-            newLikes={newLikes}
-            handleLikesChange={handleLikesChange}
-          />
+            <BlogForm
+              addNewBlog={addNewBlog}
+              newTitle={newTitle}
+              handleTitleChange={handleTitleChange}
+              newAuthor={newAuthor}
+              handleAuthorChange={handleAuthorChange}
+              newUrl={newUrl}
+              handleUrlChange={handleUrlChange}
+            />
+          </Togglable>
 
           <h2>Blogs Filter</h2>
           {blogsToShow.map((blog) => (
             <ul key={blog.id}>
               <h3>Title: {blog.title}</h3>
-              <li>Author: {blog.author}</li>
-              <li>URL: {blog.url}</li>
-              <li>Likes: {blog.likes}</li>
-              <button onClick={() => updateLikes(blog, 1)}>Like</button>
-              <button onClick={() => removeBlog(blog.id)}>delete</button>
+              <Togglable buttonLabel="view" text="hide">
+                <p>Author: {blog.author}</p>
+                <p>URL: {blog.url}</p>
+                <p>Likes: {blog.likes}</p>
+                <button onClick={() => updateLikes(blog, 1)}>Like</button>
+                <button onClick={() => removeBlog(blog.id)}>delete</button>
+              </Togglable>
             </ul>
           ))}
         </>
@@ -334,6 +347,5 @@ function App() {
     </>
   );
 }
-
 
 export default App;

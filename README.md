@@ -34,3 +34,16 @@ export default defineConfig({
     },
   },
 })
+
+npm install --save-dev vitest jsdom
+npm install --save-dev @testing-library/react @testing-library/jest-dom
+"scripts": {
+    // ...
+    "test": "vitest run"
+  }
+
+  Eslint se queja de las palabras clave test y expect en las pruebas. El problema se puede resolver instalando eslint-plugin-vitest-globals:
+  npm install --save-dev eslint-plugin-vitest-globals
+
+nstalemos la librería user-event que facilita un poco la simulación del input del usuario:
+  npm install --save-dev @testing-library/user-event

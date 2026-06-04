@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from './Button'
 
 const BlogForm = ({
   newTitle,
@@ -12,12 +12,13 @@ const BlogForm = ({
   handleLikesChange,
 }) => {
 
-  
 
-  
+
+
 
   return (
     <>
+
       <form onSubmit={addNewBlog}>
         <div>
           title: <input value={newTitle} onChange={handleTitleChange} />
@@ -28,17 +29,17 @@ const BlogForm = ({
         <div>
           url: <input value={newUrl} onChange={handleUrlChange} />
         </div>
-        <p>{newLikes}</p>
-        <Button handleClick={handleLikesChange} text="Like" />
+        
         <div>
           <button type="submit">Add</button>
         </div>
       </form>
+
     </>
-  );
-};
+  )
+}
 
 
 
-export default BlogForm ;
+export default BlogForm
 // , handleNameChange, newAuthor, handleAuthorChange, newUrl, handleUrlChange, newLikes, handleLikesChange, addNewBlog
