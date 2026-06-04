@@ -1,8 +1,8 @@
-creación de react
+# creación de react
 npm create vite@latest part1 -- --template react
 npm run dev
 
-creación de backen
+## creación de backen
 json-server db.json --port 3001
 carpera db.json en la raiz del proyecto
 
@@ -42,8 +42,48 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom
     "test": "vitest run"
   }
 
+  crear un archivo testSetup.js en la raíz del proyecto con el siguiente contenido
+
+import { afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom/vitest'
+
+afterEach(() => {
+  cleanup()
+})
+
+archivo vite.config.js de la siguiente manera:
+
+export default defineConfig({
+  // ...
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './testSetup.js', 
+  }
+})
+
   Eslint se queja de las palabras clave test y expect en las pruebas. El problema se puede resolver instalando eslint-plugin-vitest-globals:
   npm install --save-dev eslint-plugin-vitest-globals
 
 nstalemos la librería user-event que facilita un poco la simulación del input del usuario:
   npm install --save-dev @testing-library/user-event
+
+  npm test -- --coverage
+
+ ## Pruebas de extremo a extremo: Playwright
+  npm init playwright@latest
+  √ Do you want to use TypeScript or JavaScript? · JavaScript
+√ Where to put your end-to-end tests? · tests
+√ Add a GitHub Actions workflow? (Y/n) · false
+√ Install Playwright browsers (can be done manually via 'npx playwright install')? (Y/n) · true
+Installing Playwright Test (npm install --save-dev @playwright/test)…
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+
+  npm test = ejecución normal 
+  npm run test:report = Un reporte más detallado
+  npm run test -- --ui = pueden ejecutarse a través de la interfaz gráfica
+  npm test -- --project chromium

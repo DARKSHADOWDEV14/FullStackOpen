@@ -5,34 +5,55 @@ import BlogForm from './BlogForm'
 import Button from './Button'
 import Blog from './Blog'
 
-test('clicking like button twice calls event handler twice', async () => {
+test('renders title and author by default', () => {
   const blog = {
-    title: 'Cien años de soledad',
-    author: 'Gabriel García Márquez',
-    url: 'gabo@gmail.com',
-    likes: 10
+    title: 'Testing React Apps',
+    author: 'Andrew',
+    url: 'http://testing.com',
+    likes: 10,
   }
 
-  const mockHandler = vi.fn()
+  const { container } = render(<Blog blog={blog} />)
+
+  expect(container).toHaveTextContent('Testing React Apps')
+  expect(container).toHaveTextContent('Andrew')
+
+  const hiddenDiv = container.querySelector(
+    'div[style="display: none;"]'
+  )
+
+  expect(hiddenDiv).toHaveTextContent('http://testing.com')
+  expect(hiddenDiv).toHaveTextContent('Likes:')
+})
+
+test('shows url and likes when view button is clicked', async () => {
+  const blog = {
+    title: 'Testing React Apps',
+    author: 'Andrew',
+    url: 'http://testing.com',
+    likes: 10,
+  }
 
   render(
     <Blog
       blog={blog}
-      updateLikes={mockHandler}
+      updateLikes={() => {}}
       removeBlog={() => {}}
     />
   )
 
   const user = userEvent.setup()
 
-  await user.click(screen.getByText('view'))
+  const button = screen.getByText('view')
+  await user.click(button)
 
-  const likeButton = screen.getByText('like')
+  expect(
+    screen.getByText('http://testing.com')
+  ).toBeInTheDocument()
 
-  await user.click(likeButton)
-  await user.click(likeButton)
-
-  expect(mockHandler).toHaveBeenCalledTimes(2)
+  expect(
+    screen.getByText(/Likes:\s*10/i)
+  ).toBeInTheDocument()
 })
 
 test('login button calls event handler once when clicked', async () => {
@@ -52,6 +73,67 @@ test('login button calls event handler once when clicked', async () => {
   expect(mockHandler).toHaveBeenCalledTimes(1)
 })
 
+test('clicking like button twice calls event handler twice', async () => {
+  const blog = {
+    title: 'Testing React Apps',
+    author: 'Andrew',
+    url: 'http://testing.com',
+    likes: 10,
+  }
+
+  const mockHandler = vi.fn()
+
+  render(
+    <Blog
+      blog={blog}
+      updateLikes={mockHandler}
+      removeBlog={() => {}}
+    />
+  )
+
+  const user = userEvent.setup()
+
+  const viewButton = screen.getByText('view')
+  await user.click(viewButton)
+
+  const likeButton = screen.getByText('Like')
+
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockHandler).toHaveBeenCalledTimes(2)
+})
+
+test('calls the event handler with correct details when a new blog is created', async () => {
+  const createBlog = vi.fn()
+
+  const user = userEvent.setup()
+
+  render(
+    <BlogForm
+      addNewBlog={createBlog}
+      newTitle=""
+      newAuthor=""
+      newUrl=""
+      handleTitleChange={() => {}}
+      handleAuthorChange={() => {}}
+      handleUrlChange={() => {}}
+    />
+  )
+
+  const inputs = screen.getAllByRole('textbox')
+
+  await user.type(inputs[0], 'Testing React Apps')
+  await user.type(inputs[1], 'Andrew')
+  await user.type(inputs[2], 'http://testing.com')
+
+  const submitButton = screen.getByText('Add')
+
+  await user.click(submitButton)
+
+  expect(createBlog).toHaveBeenCalledTimes(1)
+})
+
 test('calls event handler with correct details when a new blog is created', async () => {
   const createBlog = vi.fn()
 
@@ -64,7 +146,6 @@ test('calls event handler with correct details when a new blog is created', asyn
       handleTitleChange={() => {}}
       handleAuthorChange={() => {}}
       handleUrlChange={() => {}}
-      newLikes={0}
       handleLikesChange={() => {}}
     />
   )
