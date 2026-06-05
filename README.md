@@ -1,24 +1,28 @@
-# creación de react
-npm create vite@latest part1 -- --template react
+### creación de react
+npm create vite@latest nombre-proyecto -- --template react
 npm run dev
 
-## creación de backen
+### creación de backend
 json-server db.json --port 3001
 carpera db.json en la raiz del proyecto
 
+### creación de carpetas para entrega de FullStackOpen
+
 part0
 part1
-  courseinfo
-  unicafe
-  anecdotes
+  + courseinfo
+  + unicafe
+  + anecdotes
 part2
-  courseinfo
-  phonebook
-  countries
+  + courseinfo
+  + phonebook
+  + countries
+
+### Creación de carpeta Build
 
 npm run build = Esto crea un directorio llamado dist (que contiene el único archivo HTML de nuestra aplicación, index.html)
---------------------------------------------------------------------------------------------------------
-Se debe agregar esto en vite.config.js despues de reducir el patch http://localhost:3001/api/persons a /api/persons, enlace a la aplicación en línea  https://fullstackopenb.onrender.com/
+
+Se debe agregar esto en vite.config.js despues de reducir el patch http://localhost:3001/api/persons a /api/persons, enlace a la aplicación en línea  [Página desplegada en Render](https://fullstackopenb.onrender.com/)
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -71,13 +75,17 @@ nstalemos la librería user-event que facilita un poco la simulación del input 
 
   npm test -- --coverage
 
- ## Pruebas de extremo a extremo: Playwright
+ ### Pruebas de extremo a extremo: Playwright
+
   npm init playwright@latest
-  √ Do you want to use TypeScript or JavaScript? · JavaScript
-√ Where to put your end-to-end tests? · tests
-√ Add a GitHub Actions workflow? (Y/n) · false
-√ Install Playwright browsers (can be done manually via 'npx playwright install')? (Y/n) · true
-Installing Playwright Test (npm install --save-dev @playwright/test)…
+  + Do you want to use TypeScript or JavaScript? · JavaScript
+  + Where to put your end-to-end tests? · tests
+  + Add a GitHub Actions workflow? (Y/n) · false
+  + Install Playwright browsers (can be done manually via 'npx playwright install')? (Y/n) · true
+
+### Installing Playwright Test 
+(npm install --save-dev @playwright/test)
+
   "scripts": {
     "test": "playwright test",
     "test:report": "playwright show-report"
@@ -87,3 +95,13 @@ Installing Playwright Test (npm install --save-dev @playwright/test)…
   npm run test:report = Un reporte más detallado
   npm run test -- --ui = pueden ejecutarse a través de la interfaz gráfica
   npm test -- --project chromium
+
+### Instalación de pnpm sin borrar los archivos anteriores
+
+Si estás trabajando en React con Vite, Express o ambos, normalmente basta con:
+
+npm install -g pnpm
+pnpm import
+pnpm install
+
+sin borrar node_modules ni package-lock.json inicialmente. Cuando confirmes que todo funciona, puedes eliminar package-lock.json para evitar mezclar gestores de paquetes.

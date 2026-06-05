@@ -6,7 +6,7 @@ const Filter = ({ filterTitle, handleFilterChange }) => {
         onChange={handleFilterChange}
       />
     </>
-  )
-}
+  );
+};
 
-export default Filter
+export default Filter;

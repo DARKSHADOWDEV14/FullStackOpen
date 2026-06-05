@@ -1,4 +1,4 @@
-import Togglable from './Togglable'
+import Togglable from './Togglable';
 
 const Blog = ({ blog, updateLikes, removeBlog }) => {
   return (
@@ -7,20 +7,15 @@ const Blog = ({ blog, updateLikes, removeBlog }) => {
       <p>Author: {blog.author}</p>
 
       <Togglable buttonLabel="view" text="hide">
-        
-        <p>{blog.url}</p>
+
+        <p>Url: {blog.url}</p>
         <p>Likes: {blog.likes}</p>
+        <button onClick={() => updateLikes(blog, 1)}> Like </button>
+        <button onClick={() => removeBlog(blog.id)}> Delete </button>
 
-        <button onClick={() => updateLikes(blog, 1)}>
-          Like
-        </button>
-
-        <button onClick={() => removeBlog(blog.id)}>
-          Delete
-        </button>
       </Togglable>
     </ol>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;

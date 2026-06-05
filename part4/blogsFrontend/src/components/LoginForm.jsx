@@ -9,6 +9,7 @@ const LoginForm = ({ handleLogin, username, password, handleUsernameChange, hand
           username
           <input
             type="text"
+            data-testid="username"
             value={username}
             name="Username"
             autoComplete="username"
@@ -19,6 +20,7 @@ const LoginForm = ({ handleLogin, username, password, handleUsernameChange, hand
           password
           <input
             type="password"
+            data-testid="password"
             value={password}
             name="Password"
             autoComplete="current-password"
@@ -28,7 +30,7 @@ const LoginForm = ({ handleLogin, username, password, handleUsernameChange, hand
         <button type="submit">Login</button>
       </form>
     </>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

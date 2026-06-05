@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
-import BlogForm from './BlogForm'
-import Button from './Button'
-import Blog from './Blog'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
+import BlogForm from './BlogForm';
+import Button from './Button';
+import Blog from './Blog';
 
 test('renders title and author by default', () => {
   const blog = {
@@ -11,20 +11,20 @@ test('renders title and author by default', () => {
     author: 'Andrew',
     url: 'http://testing.com',
     likes: 10,
-  }
+  };
 
-  const { container } = render(<Blog blog={blog} />)
+  const { container } = render(<Blog blog={blog} />);
 
-  expect(container).toHaveTextContent('Testing React Apps')
-  expect(container).toHaveTextContent('Andrew')
+  expect(container).toHaveTextContent('Testing React Apps');
+  expect(container).toHaveTextContent('Andrew');
 
   const hiddenDiv = container.querySelector(
     'div[style="display: none;"]'
-  )
+  );
 
-  expect(hiddenDiv).toHaveTextContent('http://testing.com')
-  expect(hiddenDiv).toHaveTextContent('Likes:')
-})
+  expect(hiddenDiv).toHaveTextContent('http://testing.com');
+  expect(hiddenDiv).toHaveTextContent('Likes:');
+});
 
 test('shows url and likes when view button is clicked', async () => {
   const blog = {
@@ -32,7 +32,7 @@ test('shows url and likes when view button is clicked', async () => {
     author: 'Andrew',
     url: 'http://testing.com',
     likes: 10,
-  }
+  };
 
   render(
     <Blog
@@ -40,38 +40,38 @@ test('shows url and likes when view button is clicked', async () => {
       updateLikes={() => {}}
       removeBlog={() => {}}
     />
-  )
+  );
 
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
-  const button = screen.getByText('view')
-  await user.click(button)
+  const button = screen.getByText('view');
+  await user.click(button);
 
   expect(
     screen.getByText('http://testing.com')
-  ).toBeInTheDocument()
+  ).toBeInTheDocument();
 
   expect(
     screen.getByText(/Likes:\s*10/i)
-  ).toBeInTheDocument()
-})
+  ).toBeInTheDocument();
+});
 
 test('login button calls event handler once when clicked', async () => {
-  const mockHandler = vi.fn()
+  const mockHandler = vi.fn();
 
   render(
     <Button
       onClick={mockHandler}
       text='Login'
     />
-  )
+  );
 
-  const button = screen.getByText('Login')
+  const button = screen.getByText('Login');
 
-  await userEvent.click(button)
+  await userEvent.click(button);
 
-  expect(mockHandler).toHaveBeenCalledTimes(1)
-})
+  expect(mockHandler).toHaveBeenCalledTimes(1);
+});
 
 test('clicking like button twice calls event handler twice', async () => {
   const blog = {
@@ -79,9 +79,9 @@ test('clicking like button twice calls event handler twice', async () => {
     author: 'Andrew',
     url: 'http://testing.com',
     likes: 10,
-  }
+  };
 
-  const mockHandler = vi.fn()
+  const mockHandler = vi.fn();
 
   render(
     <Blog
@@ -89,25 +89,25 @@ test('clicking like button twice calls event handler twice', async () => {
       updateLikes={mockHandler}
       removeBlog={() => {}}
     />
-  )
+  );
 
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
-  const viewButton = screen.getByText('view')
-  await user.click(viewButton)
+  const viewButton = screen.getByText('view');
+  await user.click(viewButton);
 
-  const likeButton = screen.getByText('Like')
+  const likeButton = screen.getByText('Like');
 
-  await user.click(likeButton)
-  await user.click(likeButton)
+  await user.click(likeButton);
+  await user.click(likeButton);
 
-  expect(mockHandler).toHaveBeenCalledTimes(2)
-})
+  expect(mockHandler).toHaveBeenCalledTimes(2);
+});
 
 test('calls the event handler with correct details when a new blog is created', async () => {
-  const createBlog = vi.fn()
+  const createBlog = vi.fn();
 
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
   render(
     <BlogForm
@@ -119,23 +119,23 @@ test('calls the event handler with correct details when a new blog is created', 
       handleAuthorChange={() => {}}
       handleUrlChange={() => {}}
     />
-  )
+  );
 
-  const inputs = screen.getAllByRole('textbox')
+  const inputs = screen.getAllByRole('textbox');
 
-  await user.type(inputs[0], 'Testing React Apps')
-  await user.type(inputs[1], 'Andrew')
-  await user.type(inputs[2], 'http://testing.com')
+  await user.type(inputs[0], 'Testing React Apps');
+  await user.type(inputs[1], 'Andrew');
+  await user.type(inputs[2], 'http://testing.com');
 
-  const submitButton = screen.getByText('Add')
+  const submitButton = screen.getByText('Add');
 
-  await user.click(submitButton)
+  await user.click(submitButton);
 
-  expect(createBlog).toHaveBeenCalledTimes(1)
-})
+  expect(createBlog).toHaveBeenCalledTimes(1);
+});
 
 test('calls event handler with correct details when a new blog is created', async () => {
-  const createBlog = vi.fn()
+  const createBlog = vi.fn();
 
   render(
     <BlogForm
@@ -148,18 +148,18 @@ test('calls event handler with correct details when a new blog is created', asyn
       handleUrlChange={() => {}}
       handleLikesChange={() => {}}
     />
-  )
+  );
 
-  const inputs = screen.getAllByRole('textbox')
+  const inputs = screen.getAllByRole('textbox');
 
-  await userEvent.type(inputs[0], 'Cien años de soledad')
-  await userEvent.type(inputs[1], 'Gabriel García Márquez')
-  await userEvent.type(inputs[2], 'gabo@gmail.com')
+  await userEvent.type(inputs[0], 'Cien años de soledad');
+  await userEvent.type(inputs[1], 'Gabriel García Márquez');
+  await userEvent.type(inputs[2], 'gabo@gmail.com');
 
-  const button = screen.getByText('Add')
+  const button = screen.getByText('Add');
 
-  await userEvent.click(button)
+  await userEvent.click(button);
 
-  expect(createBlog).toHaveBeenCalledTimes(1)
-})
+  expect(createBlog).toHaveBeenCalledTimes(1);
+});
 
