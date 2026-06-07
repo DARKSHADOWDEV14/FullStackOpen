@@ -9,17 +9,7 @@ import Button from './components/Button';
 import Togglable from './components/Togglable';
 import Blog from './components/Blog';
 
-//  const BlogImportant = ({ note, toggleImportance }) => {
-//   const label = note.important
-//     ? 'make not important' : 'make important'
 
-//   return (
-//     <li>
-//       {note.content}
-//       <button onClick={toggleImportance}>{label}</button>
-//     </li>
-//   )
-// }
 
 function App() {
   const [blogs, setBlogs] = useState([]);
@@ -278,8 +268,8 @@ function App() {
       <Notification message={message} />
       {user && (
         <p>
-          {user.name} logged in{' '}
-          <Button onClick={handleLogout} text="Logout" />{' '}
+          {user.name} logged in
+          <Button onClick={handleLogout} text="Logout" />
         </p>
       )}
 
