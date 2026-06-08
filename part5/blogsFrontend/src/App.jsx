@@ -1,26 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
-import BlogForm from './components/BlogForm';
-import blogsServices from './services/blogs';
-import Notification from './components/Notification';
-import Filter from './components/Filter';
-import LoginForm from './components/LoginForm';
-import loginService from './services/login';
-import Button from './components/Button';
-import Togglable from './components/Togglable';
-import Blog from './components/Blog';
-
-
+import { useState, useEffect, useRef } from "react";
+import BlogForm from "./components/BlogForm";
+import blogsServices from "./services/blogs";
+import Notification from "./components/Notification";
+import Filter from "./components/Filter";
+import LoginForm from "./components/LoginForm";
+import loginService from "./services/login";
+import Button from "./components/Button";
+import Togglable from "./components/Togglable";
+import Blog from "./components/Blog";
 
 function App() {
   const [blogs, setBlogs] = useState([]);
-  const [newTitle, setNewTitle] = useState('');
-  const [newAuthor, setNewAuthor] = useState('');
-  const [newUrl, setNewUrl] = useState('');
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newUrl, setNewUrl] = useState("");
   // const [newLikes, setNewLikes] = useState(0)
   const [message, setMessage] = useState(null);
-  const [filterTitle, setFilterTitle] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [filterTitle, setFilterTitle] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
@@ -32,7 +30,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
@@ -49,24 +47,24 @@ function App() {
         password,
       });
 
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
 
       blogsServices.setToken(user.token);
       setUser(user);
       setMessage({
         message: `Welcome ${user.name}`,
-        type: 'success',
+        type: "success",
       });
 
       setTimeout(() => {
         setMessage(null);
       }, 5000);
-      setUsername('');
-      setPassword('');
+      setUsername("");
+      setPassword("");
     } catch (exception) {
       setMessage({
-        message: 'Invalid username or password',
-        type: 'error',
+        message: "Invalid username or password",
+        type: "error",
         exception: exception,
       });
       setTimeout(() => {
@@ -84,14 +82,14 @@ function App() {
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser');
+    window.localStorage.removeItem("loggedBlogAppUser");
 
     blogsServices.setToken(null);
     setUser(null);
 
     setMessage({
-      message: 'Logged out successfully',
-      type: 'success',
+      message: "Logged out successfully",
+      type: "success",
     });
 
     setTimeout(() => {
@@ -135,7 +133,7 @@ function App() {
 
         setMessage({
           message: `Updated ${updatedBlog.title}`,
-          type: 'success',
+          type: "success",
         });
       } else {
         const newBlog = {
@@ -147,13 +145,13 @@ function App() {
 
         const createdBlog = await blogsServices.create(newBlog);
 
-        console.log('CREADO:', createdBlog);
+        console.log("CREADO:", createdBlog);
 
         setBlogs(blogs.concat(createdBlog));
 
         setMessage({
           message: `Added ${createdBlog.title} by ${createdBlog.author}`,
-          type: 'success',
+          type: "success",
         });
       }
 
@@ -161,9 +159,9 @@ function App() {
         setMessage(null);
       }, 5000);
 
-      setNewTitle('');
-      setNewAuthor('');
-      setNewUrl('');
+      setNewTitle("");
+      setNewAuthor("");
+      setNewUrl("");
       // setNewLikes(0)
       blogFormRef.current.toggleVisibility(); //useRef
     } catch (error) {
@@ -171,7 +169,7 @@ function App() {
 
       setMessage({
         message: error.response?.data?.error || error.message,
-        type: 'error',
+        type: "error",
       });
 
       setTimeout(() => {
@@ -194,7 +192,7 @@ function App() {
 
       setMessage({
         message: `Deleted ${blog.title}`,
-        type: 'success',
+        type: "success",
       });
 
       setTimeout(() => {
@@ -203,7 +201,7 @@ function App() {
     } catch (e) {
       setMessage({
         message: `Information of ${blog.title} has already been removed from server`,
-        type: 'error',
+        type: "error",
         error: e,
       });
 
@@ -240,11 +238,11 @@ function App() {
 
       setBlogs(blogs.map((b) => (b.id !== blog.id ? b : returnedBlog)));
     } catch (error) {
-      console.error('Error updating likes:', error);
+      console.error("Error updating likes:", error);
 
       setMessage({
-        message: 'Error updating likes',
-        type: 'error',
+        message: "Error updating likes",
+        type: "error",
       });
 
       setTimeout(() => {
@@ -253,15 +251,17 @@ function App() {
     }
   };
 
-  const blogsToShow = blogs.filter((blog, index) => {
-    console.log(index, blog);
+  const blogsToShow = blogs
+    .filter((blog) => {
+      return (
+        blog &&
+        blog.title &&
+        blog.title.toLowerCase().includes(filterTitle.toLowerCase())
+      );
+    })
+    .sort((a, b) => b.likes - a.likes);
 
-    return (
-      blog &&
-      blog.title &&
-      blog.title.toLowerCase().includes(filterTitle.toLowerCase())
-    );
-  });
+   
 
   return (
     <>
@@ -299,7 +299,6 @@ function App() {
           </div>
 
           <Togglable buttonLabel="Add New Blog" ref={blogFormRef} text="Cancel">
-
             <BlogForm
               addNewBlog={addNewBlog}
               newTitle={newTitle}
@@ -316,6 +315,7 @@ function App() {
             <Blog
               key={blog.id}
               blog={blog}
+              user={user}
               updateLikes={updateLikes}
               removeBlog={removeBlog}
             />

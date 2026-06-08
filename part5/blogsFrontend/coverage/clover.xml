@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1780589771773" clover="3.2.0">
+  <project timestamp="1780589771773" name="All files">
+    <metrics statements="17" coveredstatements="15" conditionals="4" coveredconditionals="4" methods="8" coveredmethods="6" elements="29" coveredelements="25" complexity="0" loc="17" ncloc="17" packages="1" files="4" classes="4"/>
+    <file name="Blog.jsx" path="F:\Programmer_Projects\fullStackOpen-G\part4\blogsFrontend\src\components\Blog.jsx">
+      <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="3" type="stmt"/>
+      <line num="16" count="2" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+    </file>
+    <file name="BlogForm.jsx" path="F:\Programmer_Projects\fullStackOpen-G\part4\blogsFrontend\src\components\BlogForm.jsx">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="13" count="2" type="stmt"/>
+    </file>
+    <file name="Button.jsx" path="F:\Programmer_Projects\fullStackOpen-G\part4\blogsFrontend\src\components\Button.jsx">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+    </file>
+    <file name="Togglable.jsx" path="F:\Programmer_Projects\fullStackOpen-G\part4\blogsFrontend\src\components\Togglable.jsx">
+      <metrics statements="9" coveredstatements="8" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="2"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="4" count="5" type="stmt"/>
+      <line num="6" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="7" count="5" type="cond" truecount="2" falsecount="0"/>
+      <line num="9" count="5" type="stmt"/>
+      <line num="10" count="2" type="stmt"/>
+      <line num="13" count="5" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="19" count="5" type="stmt"/>
+    </file>
+  </project>
+</coverage>

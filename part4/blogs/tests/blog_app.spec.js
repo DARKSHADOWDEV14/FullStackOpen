@@ -13,6 +13,14 @@ test.describe("Blog app", () => {
       },
     });
 
+    await request.post("/api/users", {
+      data: {
+        username: "Matti",
+        name: "Matti",
+        password: "Matti",
+      },
+    });
+
     await page.goto("/");
   });
 
@@ -102,23 +110,95 @@ test.describe("Blog app", () => {
       await loginWith(page, "test", "test");
       await expect(page.getByText("test logged in")).toBeVisible();
 
-      await createBlog(
-        page,
-        "Blog to delete",
-        "Andres",
-        "https://example.com",
-      );
+      await createBlog(page, "Blog to delete", "Andres", "https://example.com");
 
-      await expect(page.getByText("Added Blog to delete by Andres")).toBeVisible();
+      await expect(
+        page.getByText("Added Blog to delete by Andres"),
+      ).toBeVisible();
 
       await page.getByRole("button", { name: "view" }).click();
 
       page.on("dialog", (dialog) => dialog.accept());
       await page.getByRole("button", { name: "Delete" }).click();
 
-
       await expect(page.getByText("Deleted Blog to delete")).toBeVisible();
       await expect(page.getByText("Blog to delete")).not.toBeVisible();
     });
+  });
+
+  test.describe("Delete with user auth", () => {
+    test("only creator can see delete button", async ({ page }) => {
+      await loginWith(page, "test", "test");
+      await expect(page.getByText("test logged in")).toBeVisible();
+
+      await createBlog(
+        page,
+        "Creator Blog test",
+        "Andres",
+        "https://example.com",
+      );
+
+      await page.getByRole("button", { name: "view" }).click();
+
+      await expect(page.getByRole("button", { name: "Delete" })).toBeVisible();
+
+      await page.getByRole("button", { name: "Logout" }).click();
+
+      await loginWith(page, "Matti", "Matti");
+      await expect(page.getByText("Matti logged in")).toBeVisible();
+
+      await page.getByRole("button", { name: "view" }).click();
+
+      await expect(page.getByRole("button", { name: "Delete" })).toBeVisible();
+    });
+  });
+  test("blogs are ordered by likes", async ({ page }) => {
+    await loginWith(page, "test", "test");
+    await expect(page.getByText("test logged in")).toBeVisible();
+
+    await createBlog(page, "First Blog", "Andres", "https://first.com");
+
+    await createBlog(page, "Second Blog", "Andres", "https://second.com");
+
+    await createBlog(page, "Third Blog", "Andres", "https://third.com");
+
+    const firstBlog = page.locator(".blog").filter({
+      hasText: "First Blog",
+    });
+
+    const secondBlog = page.locator(".blog").filter({
+      hasText: "Second Blog",
+    });
+
+    const thirdBlog = page.locator(".blog").filter({
+      hasText: "Third Blog",
+    });
+
+    await firstBlog.getByRole("button", { name: "view" }).click();
+    await secondBlog.getByRole("button", { name: "view" }).click();
+    await thirdBlog.getByRole("button", { name: "view" }).click();
+
+    // First Blog = 1 like
+    await firstBlog.getByRole("button", { name: "Like" }).click();
+
+    // Second Blog = 5 likes
+    for (let i = 0; i < 5; i++) {
+      await secondBlog.getByRole("button", { name: "Like" }).click();
+    }
+
+    // Third Blog = 3 likes
+    for (let i = 0; i < 3; i++) {
+      await thirdBlog.getByRole("button", { name: "Like" }).click();
+    }
+
+    // Esperar a que React reordene la lista
+    await expect(page.locator(".blog").first()).toContainText("Second Blog");
+
+    const blogs = page.locator(".blog");
+
+    await expect(blogs.nth(0)).toContainText("Second Blog");
+    await expect(blogs.nth(2)).toContainText("Third Blog");
+    await expect(blogs.nth(1)).toContainText("First Blog");
+
   });
 });

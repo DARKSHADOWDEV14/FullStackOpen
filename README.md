@@ -91,10 +91,14 @@ nstalemos la librería user-event que facilita un poco la simulación del input 
     "test:report": "playwright show-report"
   },
 
-  npm test = ejecución normal 
+  npm test = ejecución normal se demora más por que tiene que correr en firefox, chrome, y otro
   npm run test:report = Un reporte más detallado
   npm run test -- --ui = pueden ejecutarse a través de la interfaz gráfica
   npm test -- --project chromium
+  npm test -- --only = para hacer prueba unitaria
+  Otra opción para ejecutar una sola prueba es utilizar un parámetro de la linea de comandos:
+  npm test -- -g "a user can delete a blog they created"
+  npm test -- -g "a user can delete a blog they created" --project=chromium
 
 ### Instalación de pnpm sin borrar los archivos anteriores
 
@@ -105,3 +109,11 @@ pnpm import
 pnpm install
 
 sin borrar node_modules ni package-lock.json inicialmente. Cuando confirmes que todo funciona, puedes eliminar package-lock.json para evitar mezclar gestores de paquetes.
+
+El siguiente comando ejecuta la prueba problemática en modo debug:
+npm test -- -g'importance can be changed' --debug
+
+Un rastro se guarda ejecutando las pruebas de la siguiente manera:
+npm run test -- --trace on
+Si es necesario, Trace puede verse con el comando
+npx playwright show report
