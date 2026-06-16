@@ -117,3 +117,16 @@ Un rastro se guarda ejecutando las pruebas de la siguiente manera:
 npm run test -- --trace on
 Si es necesario, Trace puede verse con el comando
 npx playwright show report
+
+### Redux
+npm install redux
+
+#### Dependencias de desarrollo
+npm install --save-dev vitest
+npm install --save-dev deep-freeze = se puede usar para garantizar que el reducer se haya definido correctamente como una función inmutable
+
+npm install react-redux
+
+npm install @reduxjs/toolkit = configureStore
+
+
