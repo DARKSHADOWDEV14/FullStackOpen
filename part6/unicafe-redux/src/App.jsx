@@ -1,10 +1,14 @@
 
 import { useSelector, useDispatch } from 'react-redux'
 
+
 const App = () => {
+
   const dispatch = useDispatch()
 
-  const { good, ok, bad } = useSelector(state => state)
+  const good = useSelector(state => state.good)
+  const ok = useSelector(state => state.ok)
+  const bad = useSelector(state => state.bad)
 
   return (
     <div>
